@@ -1151,7 +1151,7 @@ thead th{background:#eef7f2;color:#125133}
       const DB_NAME = 'medsenior_shared_folder_db';
       let currentRecords = [];
       let syncInProgress = false;
-      const API_BASE = window.API_URL || window.MEDSENIOR_API_URL || 'http://localhost:3000';
+      const API_BASE = window.API_URL || window.MEDSENIOR_API_URL || 'https://medsenior-backend.onrender.com';
       let recordsApiLoaded = false;
       let providersApiCache = [];
       let usersApiCache = [];
@@ -3339,7 +3339,7 @@ button{min-height:42px}
   function setProviderUsers(list){ writeJson(PROVIDER_USERS_KEY, Array.isArray(list) ? list : []); }
   function getOperatorUsers(){ return readJson(OPERATOR_USERS_KEY, []); }
   function setOperatorUsers(list){ writeJson(OPERATOR_USERS_KEY, Array.isArray(list) ? list : []); }
-  const API_BASE = window.API_URL || window.MEDSENIOR_API_URL || 'http://localhost:3000';
+  const API_BASE = window.API_URL || window.MEDSENIOR_API_URL || 'https://medsenior-backend.onrender.com';
   async function apiCall(path, options={}){
     const session = readJson(AUTH_KEY, null) || {};
     const headers = { 'Content-Type':'application/json', ...(options.headers || {}) };
