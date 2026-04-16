@@ -1995,7 +1995,63 @@ async function copyFilled(){
         el.dispatchEvent(new Event('change', { bubbles:true }));
       }
 
-      function clearForm(){
+      
+function fillAssistRegOptions(){
+  const assistField = $('assistReg');
+  if(!assistField) return;
+
+  const session = getSession();
+  const current = String(session?.assistReg || '').trim();
+
+  assistField.innerHTML = '';
+
+  if(current){
+    const opt = document.createElement('option');
+    opt.value = current;
+    opt.textContent = current;
+    assistField.appendChild(opt);
+    assistField.value = current;
+  }
+}
+
+function lockAssistRegFromSession(){
+  const session = getSession();
+  const assistField = $('assistReg');
+  const topLabel = $('assistRegTopLabel');
+  const topValue = $('assistRegTop');
+
+  if(topLabel){
+    if(isProviderUser(session)) topLabel.textContent = 'Prestador';
+    else if(isPlantaoUser(session)) topLabel.textContent = 'Auditoria';
+    else if(isLeadUser(session)) topLabel.textContent = 'Liderança';
+    else topLabel.textContent = 'Assist Reg';
+  }
+
+  if(topValue){
+    if(isProviderUser(session)){
+      topValue.textContent = session?.linkedProviderName || String(session?.assistReg || '').replace(/^PRESTADOR:\s*/i, '') || '--';
+    }else{
+      topValue.textContent = session?.assistReg || '--';
+    }
+  }
+
+  if(!assistField) return;
+
+  const assistName = String(session?.assistReg || '').trim();
+  assistField.innerHTML = '';
+
+  if(assistName){
+    const opt = document.createElement('option');
+    opt.value = assistName;
+    opt.textContent = assistName;
+    assistField.appendChild(opt);
+    assistField.value = assistName;
+  }
+
+  assistField.disabled = true;
+}
+
+function clearForm(){
         fields.forEach(id=>{
           const el = $(id);
           if(!el) return;
@@ -2555,8 +2611,8 @@ ${stamp}` : stamp;
       });
       ['acompSearch','acompStatus','acompSolicGroup','acompDia','acompAssist','acompOrder','leadInicio','leadFim','leadEstado','leadSolicitacao','leadPlano','leadDia','leadStatusFilter'].forEach(id=> { const el = $(id); if(el) el.addEventListener(id==='acompSearch' ? 'input' : 'change', renderAll); });
       ['leadSearch'].forEach(id=> { const el = $(id); if(el) el.addEventListener('input', renderAll); });
-      $('saveProviderBtn')?.addEventListener('click', saveProviderFromLeadership);
-      $('clearProviderBtn')?.addEventListener('click', clearProviderForm);
+      $('saveProviderBtn')?.addEventListener('click', window.saveProviderFromLeadership);
+      $('clearProviderBtn')?.addEventListener('click', window.clearProviderForm);
       $('saveProviderUserBtn')?.addEventListener('click', saveProviderUserFromLeadership);
       $('clearProviderUserBtn')?.addEventListener('click', clearProviderUserForm);
       $('saveOperatorUserBtn')?.addEventListener('click', saveOperatorUserFromCadastro);
