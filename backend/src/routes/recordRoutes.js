@@ -119,7 +119,13 @@ router.get('/', async (req, res, next) => {
       left join app.users u on u.id = r.created_by
       left join app.users a on a.id = r.assigned_to
       ${where.length ? `where ${where.join(' and ')}` : ''}
-      order by r.is_emergency desc, r.updated_at desc
+      order by
+  case
+    when upper(coalesce(r.emergency_type, '')) in ('SIM', 'EMERGENCIA', 'URGENTE')
+    then 1
+    else 0
+  end desc,
+  r.updated_at desc
     `;
 
     const { rows } = await db.query(sql, params);
